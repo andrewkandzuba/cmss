@@ -14,7 +14,7 @@ Provide conceptual architectural design for developing a (near) real rime commun
 
 # Description
 
-Overview of CMRSS ecosystem and interoperability 
+Overview of CMSS ecosystem and interoperability 
  
 ## Landscape and glossary 
 
