@@ -20,17 +20,14 @@ Overview of CMSS ecosystem and interoperability
 
 ![Figure 1](illustrations/deployment.png)
 
-FBS - Food Buy Server
-
-ES - Event Store
-CS - Campaigns catalogue 
-RCC - Results Calculation Catalogue. 
-
-CMS - Campaign Management Service
-PQS - Purchase Qualification Service
-RCS - Results Calculation Service
-
-LB - Leaderboard 
+- FBS - Food Buy Server
+- ES - Event Store
+- CS - Campaigns catalogue 
+- RCC - Results Calculation Catalogue. 
+- CMS - Campaign Management Service
+- PQS - Purchase Qualification Service
+- RCS - Results Calculation Service
+- LB - Leaderboard 
 
 ## Flow overview 
 
