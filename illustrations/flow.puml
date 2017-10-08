@@ -1,0 +1,73 @@
+@startuml
+autonumber
+
+actor Admin
+control CMS
+
+database CS
+collections ES
+
+control PQS
+
+database RCC
+control RCS
+
+control FBS
+
+control LB
+actor User
+
+=== Active campaign management ===
+
+alt Set up campaign
+    Admin -> CMS : Manage campaigns
+    CMS -> CS : Creates campaign
+end
+
+alt Trigger campaign 
+    CMS -> ES : CampaignLifecycleEvent (Status = Start)
+end
+
+=== Purchases log ===
+User -> FBS : Purchase item
+FBS -> ES : PurchaseEvent
+
+=== Purchases qualification ===
+
+alt init
+    PQS -> CMS : Pulls in active campaigns
+    PQS --> ES : Subscribes on campaign status updates
+end
+
+ES -> PQS : Receives PurchaseEvent
+PQS -> PQS : Qualifies purchase
+PQS -> ES : Publishes QualifiedPurchaseEvent
+
+=== Reduce and statistics aggregation ===
+
+ES -> RCS : Receives QualifiedPurchaseEvent
+RCS -> RCS : Reduce and aggregate\n total amount per user,\n item and campaign
+RCS -> RCC : Updates statistics
+RCS -> ES : publish ResultsCalculationUpdateEvent
+
+=== Leaderbords update ===
+
+ES -> LB : receives ResultsCalculationUpdateEvent
+LB -> RCS : REST API get top 100
+
+alt authenticated user
+    LB -> RCS : REST API get user's position
+end
+
+LB -> User : renders scores
+
+=== Campaign's completion ===
+
+CMS -> ES : CampaignLifecycleEvent (Status = End)
+ES -> FBS : receives CampaignLifecycleEvent (Status = End)
+FBS -> RCS : REST API get user at first position
+FBS -> CMS : updates campaign's winner
+FBS -> FBS : transfers amount to user's account
+FBS -> User: Notifies
+
+@enduml

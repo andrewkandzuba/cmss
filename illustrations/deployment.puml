@@ -1,0 +1,46 @@
+@startuml
+
+node "Data Cluster" as DC {
+    queue ES
+    database CS
+    database RCC
+}
+
+package "Legacy Systems" {
+
+    package "Online Grocery Store" {
+        [FBS]
+        [ULS]
+    }
+
+    package "Back Office Server" {
+        [CMS UI] as CMSUI
+    }
+
+    CMSUI -down-> CS : CRUD\noperations
+    FBS <-down-> ES : pubsub
+}
+
+
+node "Computation Cluster" as CC {
+    [CMS]
+    [PQS]
+    [RCS]
+
+    interface REST
+    RCS -up- REST
+
+    CMS .left.> ES : pubsub
+    PQS .left.> ES : pubsub
+    RCS .left.> ES : pubsub
+
+    RCS -left-> RCC : statistics aggregation
+}
+
+cloud "Web Service" as WS {
+    [Leader Board UI] as LBUI
+    LBUI -down-> REST : Pulls in statistics
+    LBUI .down.> ES : subscribe
+}
+
+@enduml
